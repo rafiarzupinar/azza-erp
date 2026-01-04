@@ -97,7 +97,7 @@ export function EditCompanyDialog({ company, open, onOpenChange }: EditCompanyDi
             <Label>Şirket Tipi *</Label>
             <Select
               value={formData.type}
-              onValueChange={(value) => setFormData({ ...formData, type: value })}
+              onValueChange={(value) => setFormData({ ...formData, type: value as "customer" | "supplier" })}
             >
               <SelectTrigger>
                 <SelectValue />

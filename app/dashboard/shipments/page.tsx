@@ -9,6 +9,7 @@ import { ShipmentActions } from "@/components/shipment-actions"
 import { createClient } from "@/lib/supabase/server"
 import { Ship, Plus } from "lucide-react"
 import { shipmentStatusLabels, getShipmentStatusVariant } from "@/lib/translations"
+import type { ShipmentStatus } from "@/types/database"
 
 export default async function ShipmentsPage() {
   const supabase = await createClient()
@@ -46,8 +47,8 @@ export default async function ShipmentsPage() {
                       </CardDescription>
                     </div>
                     <div className="flex gap-2">
-                      <Badge variant={getShipmentStatusVariant(shipment.status)}>
-                        {shipmentStatusLabels[shipment.status]}
+                      <Badge variant={getShipmentStatusVariant(shipment.status as ShipmentStatus)}>
+                        {shipmentStatusLabels[shipment.status as ShipmentStatus]}
                       </Badge>
                       <ShipmentActions shipment={shipment} />
                     </div>

@@ -7,17 +7,25 @@ import { Button } from "@/components/ui/button"
 import { CreateMachineDialog } from "@/components/create-machine-dialog"
 import { createClient } from "@/lib/supabase/server"
 import { Package, Plus } from "lucide-react"
+
 import { machineStatusLabels, getMachineStatusVariant } from "@/lib/translations"
+import type { Machine, MachineStatus } from "@/types/database"
 import Link from "next/link"
+
+type MachineWithSupplier = Machine & {
+  supplier: { name: string } | null
+}
 
 export default async function MachinesPage() {
   const supabase = await createClient()
 
-  const { data: machines } = await supabase
+  const { data: rawMachines } = await supabase
     .from('machines')
     .select('id, brand, model, machine_type, chassis_number, year, hours_used, purchase_price, purchase_currency, status, location, supplier:companies(name)')
     .order('created_at', { ascending: false })
     .limit(50)
+
+  const machines = rawMachines as unknown as MachineWithSupplier[]
 
   return (
     <SidebarProvider>
@@ -45,8 +53,8 @@ export default async function MachinesPage() {
                       <CardTitle className="group-hover:text-primary transition-colors">{machine.brand} {machine.model}</CardTitle>
                       <CardDescription>{machine.machine_type}</CardDescription>
                     </div>
-                    <Badge variant={getMachineStatusVariant(machine.status)}>
-                      {machineStatusLabels[machine.status]}
+                    <Badge variant={getMachineStatusVariant(machine.status as MachineStatus)}>
+                      {machineStatusLabels[machine.status as MachineStatus]}
                     </Badge>
                   </div>
                 </CardHeader>

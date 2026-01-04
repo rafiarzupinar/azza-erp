@@ -1,6 +1,7 @@
 import { AppSidebar } from "@/components/app-sidebar"
 import { ChartAreaInteractive } from "@/components/chart-area-interactive"
-import { DataTable } from "@/components/data-table"
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
+import { Badge } from "@/components/ui/badge"
 import { SectionCards } from "@/components/section-cards"
 import { SiteHeader } from "@/components/site-header"
 import {
@@ -54,10 +55,35 @@ export default async function DashboardPage() {
           <div className="@container/main flex flex-1 flex-col gap-2">
             <div className="flex flex-col gap-4 py-4 md:gap-6 md:py-6">
               <SectionCards stats={stats} />
-              <div className="px-4 lg:px-6">
-                <ChartAreaInteractive />
+              <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-7">
+                <Card className="col-span-4">
+                  <CardHeader>
+                    <CardTitle>Son Eklenen Makineler</CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <div className="space-y-8">
+                      {machines?.map((machine) => (
+                        <div key={machine.id} className="flex items-center">
+                          <div className="ml-4 space-y-1">
+                            <p className="text-sm font-medium leading-none">{machine.brand} {machine.model}</p>
+                            <p className="text-sm text-muted-foreground">
+                              {machine.machine_type}
+                            </p>
+                          </div>
+                          <div className="ml-auto font-medium">
+                            <Badge variant={machine.status === 'sold' ? 'secondary' : 'outline'}>
+                              {machine.status === 'sold' ? 'Satıldı' : 'Stokta'}
+                            </Badge>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  </CardContent>
+                </Card>
+                <div className="col-span-3">
+                  <ChartAreaInteractive />
+                </div>
               </div>
-              <DataTable data={machines || []} />
             </div>
           </div>
         </div>

@@ -17,7 +17,7 @@ export function NavMain({
   items: {
     title: string
     url: string
-    icon?: LucideIcon
+    icon?: React.ElementType
   }[]
 }) {
   return (
