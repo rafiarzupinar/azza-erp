@@ -8,6 +8,7 @@ import { CreateExpenseDialog } from "@/components/create-expense-dialog"
 import { createClient } from "@/lib/supabase/server"
 import { CreditCard, Plus } from "lucide-react"
 import { expenseCategoryLabels } from "@/lib/translations"
+import type { ExpenseCategory } from "@/types/database"
 
 export default async function ExpensesPage() {
   const supabase = await createClient()
@@ -39,7 +40,7 @@ export default async function ExpensesPage() {
                     <div>
                       <CardTitle>{expense.description}</CardTitle>
                       <CardDescription>
-                        {expenseCategoryLabels[expense.category]} • {expense.proforma_invoice?.invoice_number || 'Genel gider'}
+                        {expenseCategoryLabels[expense.category as ExpenseCategory]} • {expense.proforma_invoice?.invoice_number || 'Genel gider'}
                       </CardDescription>
                     </div>
                     <Badge variant={expense.paid ? 'default' : 'outline'}>
