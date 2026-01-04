@@ -11,16 +11,25 @@ import { createClient } from "@/lib/supabase/server"
 import { FileText, Plus } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { paymentStatusLabels, getPaymentStatusVariant } from "@/lib/translations"
-import type { PaymentStatus } from "@/types/database"
+import type { PaymentStatus, ProformaInvoice, Company, Machine, ProformaInvoiceItem, BankAccount } from "@/types/database"
+
+type InvoiceWithRelations = ProformaInvoice & {
+  customer?: Company
+  machine?: Machine
+  bank_account?: BankAccount
+  items?: (ProformaInvoiceItem & { machine?: Machine })[]
+}
 
 export default async function InvoicesPage() {
   const supabase = await createClient()
 
-  const { data: invoices } = await supabase
+  const { data: rawInvoices } = await supabase
     .from('proforma_invoices')
     .select('id, invoice_number, status, issue_date, total_amount, currency, loading_port, destination_port, payment_terms, deposit_amount, deposit_paid, customer:companies(name), machine:machines(brand, model, status), items:proforma_invoice_items(id, machine:machines(brand, model, status))')
     .order('created_at', { ascending: false })
     .limit(50)
+
+  const invoices = rawInvoices as unknown as InvoiceWithRelations[]
 
   return (
     <SidebarProvider>
@@ -37,10 +46,10 @@ export default async function InvoicesPage() {
           </div>
 
           <div className="space-y-4">
-            {invoices?.map((invoice) => {
+            {invoices?.map((invoice: InvoiceWithRelations) => {
               // Tüm makineler satıldı mı kontrol et
               const allMachinesSold = invoice.items && invoice.items.length > 0
-                ? invoice.items.every((item: any) => item.machine?.status === 'sold')
+                ? invoice.items.every((item) => item.machine?.status === 'sold')
                 : invoice.machine?.status === 'sold'
 
               return (
