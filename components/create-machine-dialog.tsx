@@ -48,6 +48,12 @@ export function CreateMachineDialog() {
   const router = useRouter()
   const supabase = createClient()
 
+  const [mounted, setMounted] = useState(false)
+
+  useEffect(() => {
+    setMounted(true)
+  }, [])
+
   useEffect(() => {
     if (open) {
       fetchSuppliers()
@@ -68,21 +74,48 @@ export function CreateMachineDialog() {
     setLoading(true)
 
     try {
-      const { error } = await supabase.from('machines').insert({
+      // Convert empty string to null for optional UUID fields
+      const formattedData = {
         ...formData,
+        supplier_id: formData.supplier_id === '' ? null : formData.supplier_id,
         status: 'available',
-      })
+      }
+
+      const { error } = await supabase.from('machines').insert(formattedData)
 
       if (error) throw error
 
       setOpen(false)
+      setFormData({
+        brand: '',
+        model: '',
+        machine_type: '',
+        chassis_number: '',
+        year: new Date().getFullYear(),
+        hours_used: 0,
+        purchase_price: 0,
+        purchase_currency: 'USD' as CurrencyType,
+        supplier_id: '',
+        purchase_date: new Date().toISOString().split('T')[0],
+        location: '',
+        notes: '',
+      })
       router.refresh()
-    } catch (error) {
+    } catch (error: any) {
       console.error('Hata:', error)
-      alert('Makine eklenirken hata oluştu!')
+      alert(`Makine eklenirken hata oluştu! Detay: ${error.message || error.toString()}`)
     } finally {
       setLoading(false)
     }
+  }
+
+  if (!mounted) {
+    return (
+      <Button>
+        <Plus className="mr-2 h-4 w-4" />
+        Yeni Makine Ekle
+      </Button>
+    )
   }
 
   return (
@@ -101,8 +134,8 @@ export function CreateMachineDialog() {
           </DialogDescription>
         </DialogHeader>
 
-        <form onSubmit={handleSubmit} className="space-y-4">
-          <div className="grid grid-cols-2 gap-4">
+        <form onSubmit={handleSubmit} className="space-y-4 px-1">
+          <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
             <div className="space-y-2">
               <Label htmlFor="brand">Marka *</Label>
               <Input
@@ -147,7 +180,7 @@ export function CreateMachineDialog() {
             />
           </div>
 
-          <div className="grid grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
             <div className="space-y-2">
               <Label htmlFor="year">Yıl</Label>
               <Input
@@ -168,7 +201,7 @@ export function CreateMachineDialog() {
             </div>
           </div>
 
-          <div className="grid grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
             <div className="space-y-2">
               <Label htmlFor="purchase_price">Alış Fiyatı</Label>
               <Input
@@ -217,7 +250,7 @@ export function CreateMachineDialog() {
             </Select>
           </div>
 
-          <div className="grid grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
             <div className="space-y-2">
               <Label htmlFor="purchase_date">Satın Alma Tarihi</Label>
               <Input

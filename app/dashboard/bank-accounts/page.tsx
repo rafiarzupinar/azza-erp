@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
 import { createClient } from "@/lib/supabase/server"
 import { Plus, Building } from "lucide-react"
+import { CreateBankAccountDialog } from "@/components/create-bank-account-dialog"
 
 export default async function BankAccountsPage() {
   const supabase = await createClient()
@@ -26,10 +27,7 @@ export default async function BankAccountsPage() {
               <h1 className="text-2xl font-bold">Banka Hesapları</h1>
               <p className="text-muted-foreground">Tüm banka hesapları</p>
             </div>
-            <Button>
-              <Plus className="mr-2 h-4 w-4" />
-              Yeni Hesap Ekle
-            </Button>
+            <CreateBankAccountDialog />
           </div>
 
           <div className="grid gap-4 md:grid-cols-2">

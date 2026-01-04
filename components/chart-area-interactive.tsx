@@ -139,12 +139,28 @@ const chartConfig = {
 export function ChartAreaInteractive() {
   const isMobile = useIsMobile()
   const [timeRange, setTimeRange] = React.useState("30d")
+  const [mounted, setMounted] = React.useState(false)
+
+  React.useEffect(() => {
+    setMounted(true)
+  }, [])
 
   React.useEffect(() => {
     if (isMobile) {
       setTimeRange("7d")
     }
   }, [isMobile])
+
+  if (!mounted) {
+    return (
+      <Card className="@container/card">
+        <CardHeader className="relative">
+          <CardTitle>Total Visitors</CardTitle>
+          <CardDescription>Loading chart...</CardDescription>
+        </CardHeader>
+      </Card>
+    )
+  }
 
   const filteredData = chartData.filter((item) => {
     const date = new Date(item.date)

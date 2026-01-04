@@ -47,9 +47,9 @@ export async function generateProformaInvoicePDF(proforma: ProformaData) {
   doc.setFont('times', 'bold')
   doc.setFontSize(14)
   doc.setTextColor(0, 0, 0)
-      doc.text('AZZA IS MAKINELERI', 50, 15)
-      
-        doc.setFont('times', 'bold')
+  doc.text('AZZA IS MAKINELERI', 50, 15)
+
+  doc.setFont('times', 'bold')
   doc.setFontSize(14)
   doc.setTextColor(0, 0, 0)
   doc.text('DERI TEKS. SAN. ve TIC. LTD. STI', 50, 21)
@@ -57,7 +57,7 @@ export async function generateProformaInvoicePDF(proforma: ProformaData) {
   doc.setFont('times', 'normal')
   doc.setFontSize(9)
 
-  doc.text('Adres: SUMER Mah. 27/3 Sokak No:4A Zeytinburnu/IST', 50, 26)
+  doc.text('Adres: Nuripasa Mah Bekirsubasi Sok. No:23B Zeytinburnu/ISTANBUL', 50, 26)
   doc.text('Cell: +905321696098', 50, 31)
 
   // Date ve Invoice No
@@ -126,7 +126,7 @@ export async function generateProformaInvoicePDF(proforma: ProformaData) {
       machineDesc,
       `${item.quantity}\nUnits`,
       `${item.unit_price.toFixed(0)}\n${proforma.currency}`,
-      `${item.total_price.toFixed(0)}\n${proforma.currency}`
+      `${(item.unit_price * item.quantity).toFixed(0)}\n${proforma.currency}`
     ]
   })
 
@@ -185,12 +185,14 @@ export async function generateProformaInvoicePDF(proforma: ProformaData) {
   // Terms of Payment
   doc.setFont('times', 'bold')
   doc.setFontSize(10)
-  doc.text('Terms of Payment:', margin, yPos)
+  const paymentLabel = 'Terms of Payment:'
+  doc.text(paymentLabel, margin, yPos)
+  const labelWidth = doc.getTextWidth(paymentLabel)
 
   doc.setFont('times', 'normal')
   doc.setFontSize(9)
-  const paymentTerms = normalizeText(proforma.payment_terms || '30% deposit, 70% before delivery')
-  doc.text(paymentTerms, margin + 40, yPos)
+  const paymentTerms = normalizeText(proforma.payment_terms || '30% deposit, 70% before delivery').trim()
+  doc.text(paymentTerms, margin + labelWidth + 2, yPos)
 
   if (proforma.deposit_amount) {
     yPos += 6

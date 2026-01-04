@@ -21,8 +21,8 @@ interface SectionCardsProps {
 
 export function SectionCards({ stats }: SectionCardsProps) {
   return (
-    <div className="*:data-[slot=card]:shadow-xs @xl/main:grid-cols-2 @5xl/main:grid-cols-4 grid grid-cols-1 gap-4 px-4 lg:px-6">
-      <Card className="@container/card">
+    <div className="grid grid-cols-1 gap-4 px-4 lg:grid-cols-4 lg:px-6">
+      <Card>
         <CardHeader className="relative">
           <CardDescription>Toplam Makineler</CardDescription>
           <CardTitle className="@[250px]/card:text-3xl text-2xl font-semibold tabular-nums">
@@ -39,7 +39,7 @@ export function SectionCards({ stats }: SectionCardsProps) {
         </CardFooter>
       </Card>
 
-      <Card className="@container/card">
+      <Card>
         <CardHeader className="relative">
           <CardDescription>Proforma Invoice</CardDescription>
           <CardTitle className="@[250px]/card:text-3xl text-2xl font-semibold tabular-nums">
@@ -56,7 +56,7 @@ export function SectionCards({ stats }: SectionCardsProps) {
         </CardFooter>
       </Card>
 
-      <Card className="@container/card">
+      <Card>
         <CardHeader className="relative">
           <CardDescription>Aktif Sevkiyat</CardDescription>
           <CardTitle className="@[250px]/card:text-3xl text-2xl font-semibold tabular-nums">
@@ -73,7 +73,7 @@ export function SectionCards({ stats }: SectionCardsProps) {
         </CardFooter>
       </Card>
 
-      <Card className="@container/card">
+      <Card>
         <CardHeader className="relative">
           <CardDescription>Toplam Gelir</CardDescription>
           <CardTitle className="@[250px]/card:text-3xl text-2xl font-semibold tabular-nums">

@@ -6,6 +6,7 @@ export default async function DashboardLayout({
 }: {
   children: React.ReactNode
 }) {
+  /* Auth check disabled for dev
   const supabase = await createClient()
   const {
     data: { user },
@@ -14,6 +15,8 @@ export default async function DashboardLayout({
   if (!user) {
     redirect('/login')
   }
+  */
+
 
   return <>{children}</>
 }

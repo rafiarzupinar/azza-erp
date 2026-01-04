@@ -57,6 +57,7 @@ export interface Machine {
   location?: string
   notes?: string
   images?: string[]
+  documents?: string[]
   created_at: string
   updated_at: string
   supplier?: Company
@@ -179,6 +180,7 @@ export interface Expense {
   id: string
   proforma_invoice_id?: string
   shipment_id?: string
+  machine_id?: string
   category: ExpenseCategory
 
   description: string

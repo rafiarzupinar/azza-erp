@@ -25,13 +25,18 @@ import { Plus, Loader2 } from 'lucide-react'
 import type { ProformaInvoice, ExpenseCategory, CurrencyType } from '@/types/database'
 import { expenseCategoryLabels } from '@/lib/translations'
 
-export function CreateExpenseDialog() {
+interface CreateExpenseDialogProps {
+  machineId?: string
+}
+
+export function CreateExpenseDialog({ machineId }: CreateExpenseDialogProps) {
   const [open, setOpen] = useState(false)
   const [loading, setLoading] = useState(false)
   const [invoices, setInvoices] = useState<ProformaInvoice[]>([])
 
   const [formData, setFormData] = useState({
     proforma_invoice_id: '',
+    machine_id: machineId || '',
     category: 'transport' as ExpenseCategory,
     description: '',
     amount: 0,
@@ -67,6 +72,7 @@ export function CreateExpenseDialog() {
     try {
       const { error } = await supabase.from('expenses').insert({
         proforma_invoice_id: formData.proforma_invoice_id || null,
+        machine_id: formData.machine_id || null,
         category: formData.category,
         description: formData.description,
         amount: formData.amount,

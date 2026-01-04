@@ -33,7 +33,8 @@ export default async function DashboardPage() {
   // Fetch machines for table
   const { data: machines } = await supabase
     .from('machines')
-    .select('*, supplier:companies(*)')
+    .select('id, brand, model, machine_type, status, created_at, supplier:companies(name)')
+    .limit(10)
     .order('created_at', { ascending: false })
 
   const stats = {
@@ -43,15 +44,9 @@ export default async function DashboardPage() {
     totalRevenue: totalRevenue,
   }
 
+
   return (
-    <SidebarProvider
-      style={
-        {
-          "--sidebar-width": "calc(var(--spacing) * 72)",
-          "--header-height": "calc(var(--spacing) * 12)",
-        } as React.CSSProperties
-      }
-    >
+    <SidebarProvider>
       <AppSidebar variant="inset" />
       <SidebarInset>
         <SiteHeader />

@@ -8,14 +8,16 @@ import { CreateMachineDialog } from "@/components/create-machine-dialog"
 import { createClient } from "@/lib/supabase/server"
 import { Package, Plus } from "lucide-react"
 import { machineStatusLabels, getMachineStatusVariant } from "@/lib/translations"
+import Link from "next/link"
 
 export default async function MachinesPage() {
   const supabase = await createClient()
 
   const { data: machines } = await supabase
     .from('machines')
-    .select('*, supplier:companies(*)')
+    .select('id, brand, model, machine_type, chassis_number, year, hours_used, purchase_price, purchase_currency, status, location, supplier:companies(name)')
     .order('created_at', { ascending: false })
+    .limit(50)
 
   return (
     <SidebarProvider>
@@ -33,11 +35,14 @@ export default async function MachinesPage() {
 
           <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
             {machines?.map((machine) => (
-              <Card key={machine.id}>
+              <Card key={machine.id} className="hover:bg-accent/50 transition-colors cursor-pointer group relative overflow-hidden">
+                <Link href={`/dashboard/machines/${machine.id}`} className="absolute inset-0 z-10">
+                  <span className="sr-only">Detayları Görüntüle</span>
+                </Link>
                 <CardHeader>
                   <div className="flex items-start justify-between">
                     <div>
-                      <CardTitle>{machine.brand} {machine.model}</CardTitle>
+                      <CardTitle className="group-hover:text-primary transition-colors">{machine.brand} {machine.model}</CardTitle>
                       <CardDescription>{machine.machine_type}</CardDescription>
                     </div>
                     <Badge variant={getMachineStatusVariant(machine.status)}>
@@ -89,9 +94,9 @@ export default async function MachinesPage() {
 
           {!machines || machines.length === 0 && (
             <Card>
-              <CardContent className="flex flex-col items-center justify-center py-12">
-                <Package className="h-12 w-12 text-muted-foreground mb-4" />
-                <p className="text-muted-foreground">Henüz makine kaydı bulunmamaktadır.</p>
+              <CardContent className="flex flex-col items-center justify-center py-8 md:py-12">
+                <Package className="h-10 w-10 md:h-12 md:w-12 text-muted-foreground mb-4" />
+                <p className="text-muted-foreground text-center">Henüz makine kaydı bulunmamaktadır.</p>
                 <Button className="mt-4">
                   <Plus className="mr-2 h-4 w-4" />
                   İlk Makineyi Ekleyin

@@ -45,13 +45,21 @@ export function CreateProformaDialog({ buttonText = 'Yeni Proforma Oluştur', fu
     delivery_terms: 'FOB',
     loading_port: '',
     destination_port: '',
-    payment_terms: '30% deposit, 70% before delivery',
-    deposit_percentage: 30,
-    profit_margin: 30,
+    payment_terms: '100%',
+    deposit_percentage: 0,
+    profit_margin: 0,
   })
 
   const router = useRouter()
   const supabase = createClient()
+
+  const [mounted, setMounted] = useState(false)
+
+  useEffect(() => {
+    setMounted(true)
+  }, [])
+
+  // State defined in line 56. Removing duplicates.
 
   useEffect(() => {
     if (open) {
@@ -59,16 +67,55 @@ export function CreateProformaDialog({ buttonText = 'Yeni Proforma Oluştur', fu
     }
   }, [open])
 
+  // ... (fetchData and calculateTotals remain, handled by context or we skip them in replace)
+  // To avoid replacing large chunks, I'll just insert the mounted check before return.
+  // Wait, I need to add `const [mounted, setMounted]` inside the component body first.
+
+  // Actually, I can do it in two steps.
+  // 1. Add state in the beginning of function.
+  // 2. Add hydration check before return.
+
+  // Let's do step 1 (Add state)
+  // I'll target the existing useEffect to add the new state and effect above it.
+
+
   const fetchData = async () => {
-    const [customersRes, banksRes, machinesRes] = await Promise.all([
+    const [customersRes, banksRes, machinesRes, lastInvoiceRes] = await Promise.all([
       supabase.from('companies').select('*').eq('type', 'customer'),
       supabase.from('bank_accounts').select('*').eq('is_active', true),
       supabase.from('machines').select('*').eq('status', 'available'),
+      supabase.from('proforma_invoices').select('invoice_number').order('created_at', { ascending: false }).limit(1).single()
     ])
 
     if (customersRes.data) setCustomers(customersRes.data)
     if (banksRes.data) setBankAccounts(banksRes.data)
     if (machinesRes.data) setAvailableMachines(machinesRes.data)
+
+    // Auto-increment Invoice Number
+    const currentYear = new Date().getFullYear()
+    let nextNumber = `${currentYear}001`
+
+    if (lastInvoiceRes.data?.invoice_number) {
+      const lastNumber = lastInvoiceRes.data.invoice_number
+      // Check if last number starts with current year
+      if (lastNumber.startsWith(currentYear.toString()) && !isNaN(Number(lastNumber))) {
+        const nextSeq = Number(lastNumber) + 1
+        nextNumber = nextSeq.toString()
+      }
+    }
+
+    // Set default bank to Albaraka if found
+    if (banksRes.data) {
+      const albaraka = banksRes.data.find(b => b.bank_name.toLowerCase().includes('albaraka'))
+      if (albaraka && !formData.bank_account_id) {
+        setFormData(prev => ({ ...prev, bank_account_id: albaraka.id }))
+      }
+    }
+
+    // Only set if we haven't manually entered one (or if it's empty)
+    if (!formData.invoice_number) {
+      setFormData(prev => ({ ...prev, invoice_number: nextNumber }))
+    }
   }
 
   const calculateTotals = () => {
@@ -89,6 +136,16 @@ export function CreateProformaDialog({ buttonText = 'Yeni Proforma Oluştur', fu
 
     if (selectedMachines.length === 0) {
       alert('En az bir makine seçmelisiniz!')
+      return
+    }
+
+    if (!formData.customer_id) {
+      alert('Lütfen bir müşteri seçin!')
+      return
+    }
+
+    if (!formData.bank_account_id) {
+      alert('Lütfen bir banka hesabı seçin!')
       return
     }
 
@@ -165,15 +222,24 @@ export function CreateProformaDialog({ buttonText = 'Yeni Proforma Oluştur', fu
         profit_margin: 30,
       })
       router.refresh()
-    } catch (error) {
+    } catch (error: any) {
       console.error('Hata:', error)
-      alert('Proforma oluşturulurken hata oluştu!')
+      alert(`Proforma oluşturulurken hata oluştu! Detay: ${error.message || error.toString()}`)
     } finally {
       setLoading(false)
     }
   }
 
   const { totalAmount, depositAmount } = selectedMachines.length > 0 ? calculateTotals() : { totalAmount: 0, depositAmount: 0 }
+
+  if (!mounted) {
+    return (
+      <Button className={fullWidth ? "w-full justify-start" : ""}>
+        <Plus className="mr-2 h-4 w-4" />
+        <span>{buttonText}</span>
+      </Button>
+    )
+  }
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
@@ -265,7 +331,7 @@ export function CreateProformaDialog({ buttonText = 'Yeni Proforma Oluştur', fu
             </div>
           </div>
 
-          <div className="grid grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
             <div className="space-y-2">
               <Label htmlFor="loading_port">Yükleme Limanı *</Label>
               <Input
@@ -306,7 +372,7 @@ export function CreateProformaDialog({ buttonText = 'Yeni Proforma Oluştur', fu
             </Select>
           </div>
 
-          <div className="grid grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
             <div className="space-y-2">
               <Label htmlFor="payment_terms">Ödeme Koşulları</Label>
               <Input
@@ -365,7 +431,7 @@ export function CreateProformaDialog({ buttonText = 'Yeni Proforma Oluştur', fu
           {selectedMachines.length > 0 && (
             <div className="bg-blue-50 p-4 rounded-md space-y-2">
               <h4 className="font-semibold text-sm">Özet:</h4>
-              <div className="grid grid-cols-2 gap-2 text-sm">
+              <div className="grid grid-cols-1 gap-2 text-sm md:grid-cols-2">
                 <div>
                   <span className="text-muted-foreground">Seçilen Makine:</span>
                   <span className="ml-2 font-semibold">{selectedMachines.length} adet</span>
