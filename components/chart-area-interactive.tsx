@@ -178,35 +178,34 @@ export function ChartAreaInteractive() {
 
   return (
     <Card className="@container/card">
-      <CardHeader className="relative">
-        <CardTitle>Total Visitors</CardTitle>
-        <CardDescription>
-          <span className="@[540px]/card:block hidden">
-            Total for the last 3 months
-          </span>
-          <span className="@[540px]/card:hidden">Last 3 months</span>
-        </CardDescription>
-        <div className="absolute right-4 top-4">
+      <CardHeader className="flex flex-col items-center space-y-0 border-b p-0 sm:flex-row sm:items-stretch">
+        <div className="flex flex-1 flex-col justify-center gap-1 px-6 py-5 items-center text-center sm:items-start sm:text-left sm:py-6">
+          <CardTitle>Total Visitors</CardTitle>
+          <CardDescription>
+            Showing total visitors for the last 3 months
+          </CardDescription>
+        </div>
+        <div className="flex w-full items-center justify-center gap-2 px-6 py-4 sm:w-auto sm:border-l sm:px-8 sm:py-6">
           <ToggleGroup
             type="single"
             value={timeRange}
             onValueChange={setTimeRange}
             variant="outline"
-            className="@[767px]/card:flex hidden"
+            className="hidden sm:flex"
           >
             <ToggleGroupItem value="90d" className="h-8 px-2.5">
-              Last 3 months
+              3 Months
             </ToggleGroupItem>
             <ToggleGroupItem value="30d" className="h-8 px-2.5">
-              Last 30 days
+              30 Days
             </ToggleGroupItem>
             <ToggleGroupItem value="7d" className="h-8 px-2.5">
-              Last 7 days
+              7 Days
             </ToggleGroupItem>
           </ToggleGroup>
           <Select value={timeRange} onValueChange={setTimeRange}>
             <SelectTrigger
-              className="@[767px]/card:hidden flex w-40"
+              className="w-full max-w-[200px] sm:hidden"
               aria-label="Select a value"
             >
               <SelectValue placeholder="Last 3 months" />

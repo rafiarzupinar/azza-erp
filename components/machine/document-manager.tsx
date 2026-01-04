@@ -26,6 +26,11 @@ export function DocumentManager({ machine }: DocumentManagerProps) {
             setUploading(true)
 
             try {
+                  const { data: { session } } = await supabase.auth.getSession()
+                  if (!session) {
+                        throw new Error('Oturum bulunamadı. Lütfen sayfayı yenileyip tekrar giriş yapın.')
+                  }
+
                   const fileExt = file.name.split('.').pop()
                   const fileName = `${machine.id}/${Math.random().toString(36).substring(2)}.${fileExt}`
                   const filePath = `${fileName}`
