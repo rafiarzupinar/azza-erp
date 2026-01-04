@@ -14,10 +14,10 @@ import { paymentStatusLabels, getPaymentStatusVariant } from "@/lib/translations
 import type { PaymentStatus, ProformaInvoice, Company, Machine, ProformaInvoiceItem, BankAccount } from "@/types/database"
 
 type InvoiceWithRelations = ProformaInvoice & {
-  customer?: Company
-  machine?: Machine
-  bank_account?: BankAccount
-  items?: (ProformaInvoiceItem & { machine?: Machine })[]
+  customer: Company | null
+  machine: Machine | null
+  bank_account: BankAccount | null
+  items: (ProformaInvoiceItem & { machine: Machine | null })[]
 }
 
 export default async function InvoicesPage() {
