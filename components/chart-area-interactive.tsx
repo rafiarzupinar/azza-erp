@@ -178,7 +178,7 @@ export function ChartAreaInteractive() {
 
   return (
     <Card className="@container/card">
-      <CardHeader className="flex flex-col items-center space-y-0 border-b p-0 sm:flex-row sm:items-stretch">
+      <div className="flex flex-col items-center space-y-0 border-b p-0 sm:flex-row sm:items-stretch">
         <div className="flex flex-1 flex-col justify-center gap-1 px-6 py-5 items-center text-center sm:items-start sm:text-left sm:py-6">
           <CardTitle>Total Visitors</CardTitle>
           <CardDescription>
@@ -223,7 +223,7 @@ export function ChartAreaInteractive() {
             </SelectContent>
           </Select>
         </div>
-      </CardHeader>
+      </div>
       <CardContent className="px-2 pt-4 sm:px-6 sm:pt-6">
         <ChartContainer
           config={chartConfig}
