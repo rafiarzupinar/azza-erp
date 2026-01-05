@@ -1,3 +1,4 @@
+import Link from "next/link"
 import Image from "next/image"
 import { SidebarTrigger } from "@/components/ui/sidebar"
 import { Separator } from "@/components/ui/separator"
@@ -10,13 +11,15 @@ export function SiteHeader() {
       <div className="flex w-full items-center justify-between md:hidden">
         {/* Left: Logo */}
         <div className="flex items-center">
-          <Image
-            src="/azza-logo.png"
-            alt="AZZA Logo"
-            width={48}
-            height={48}
-            className="h-12 w-auto object-contain"
-          />
+          <Link href="/dashboard">
+            <Image
+              src="/azza-logo.png"
+              alt="AZZA Logo"
+              width={48}
+              height={48}
+              className="h-12 w-auto object-contain"
+            />
+          </Link>
         </div>
 
         {/* Center: AZZA Text */}

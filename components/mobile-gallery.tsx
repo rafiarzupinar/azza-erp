@@ -108,6 +108,9 @@ export function MobileGallery() {
             }
       }
 
+      const [isExpanded, setIsExpanded] = useState(false)
+      const displayedImages = isExpanded ? images : images.slice(0, 4)
+
       return (
             <Card className="border-dashed border-2">
                   <CardHeader className="flex flex-row items-center justify-between pb-2">
@@ -140,24 +143,36 @@ export function MobileGallery() {
                                     Henüz görsel yok
                               </div>
                         ) : (
-                              <div className="flex gap-4 overflow-x-auto pb-4 snap-x snap-mandatory">
-                                    {images.map((img) => (
-                                          <div key={img.id} className="relative group flex-none w-40 aspect-square rounded-lg overflow-hidden border bg-muted snap-center">
-                                                <img
-                                                      src={img.url}
-                                                      alt="Gallery"
-                                                      className="object-cover w-full h-full"
-                                                      loading="lazy"
-                                                />
-                                                <button
-                                                      onClick={() => handleDelete(img.id, img.url)}
-                                                      className="absolute top-2 right-2 bg-red-600 text-white p-2 rounded-full shadow-md hover:bg-red-700 transition-colors"
-                                                >
-                                                      <Trash2 className="h-3 w-3" />
-                                                </button>
-                                          </div>
-                                    ))}
-                              </div>
+                              <>
+                                    <div className="grid grid-cols-2 gap-4">
+                                          {displayedImages.map((img) => (
+                                                <div key={img.id} className="relative group aspect-square rounded-lg overflow-hidden border bg-muted">
+                                                      <img
+                                                            src={img.url}
+                                                            alt="Gallery"
+                                                            className="object-cover w-full h-full"
+                                                            loading="lazy"
+                                                      />
+                                                      <button
+                                                            onClick={() => handleDelete(img.id, img.url)}
+                                                            className="absolute top-2 right-2 bg-red-600 text-white p-2 rounded-full shadow-md hover:bg-red-700 transition-colors"
+                                                      >
+                                                            <Trash2 className="h-3 w-3" />
+                                                      </button>
+                                                </div>
+                                          ))}
+                                    </div>
+
+                                    {images.length > 4 && (
+                                          <Button
+                                                variant="ghost"
+                                                className="w-full mt-4 text-muted-foreground hover:text-foreground"
+                                                onClick={() => setIsExpanded(!isExpanded)}
+                                          >
+                                                {isExpanded ? "Daha Az Göster" : `Tümünü Gör (${images.length})`}
+                                          </Button>
+                                    )}
+                              </>
                         )}
                   </CardContent>
             </Card>
