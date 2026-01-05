@@ -28,6 +28,10 @@ import {
   SidebarMenuItem,
   useSidebar,
 } from "@/components/ui/sidebar"
+import { Switch } from "@/components/ui/switch"
+import { ProfileDialog } from "@/components/profile-dialog"
+import { useState, useEffect } from "react"
+import { createClient } from "@/lib/supabase/client"
 
 export function NavUser({
   user,
@@ -39,6 +43,35 @@ export function NavUser({
   }
 }) {
   const { isMobile } = useSidebar()
+  const [notifications, setNotifications] = useState(true)
+  const supabase = createClient()
+
+  // Initial fetch for notifications preference
+  useEffect(() => {
+    async function loadSettings() {
+      const { data: { user: authUser } } = await supabase.auth.getUser()
+      if (authUser) {
+        const { data } = await supabase
+          .from('profiles')
+          .select('notifications_enabled')
+          .eq('id', authUser.id)
+          .single()
+        if (data) setNotifications(data.notifications_enabled)
+      }
+    }
+    loadSettings()
+  }, [])
+
+  const toggleNotifications = async (checked: boolean) => {
+    setNotifications(checked)
+    const { data: { user: authUser } } = await supabase.auth.getUser()
+    if (authUser) {
+      await supabase
+        .from('profiles')
+        .update({ notifications_enabled: checked })
+        .eq('id', authUser.id)
+    }
+  }
 
   return (
     <SidebarMenu>
@@ -63,7 +96,7 @@ export function NavUser({
             </SidebarMenuButton>
           </DropdownMenuTrigger>
           <DropdownMenuContent
-            className="w-[--radix-dropdown-menu-trigger-width] min-w-56 rounded-lg"
+            className="w-[--radix-dropdown-menu-trigger-width] min-w-56 rounded-lg bg-white text-slate-900 border-slate-200"
             side={isMobile ? "bottom" : "right"}
             align="end"
             sideOffset={4}
@@ -84,27 +117,39 @@ export function NavUser({
             </DropdownMenuLabel>
             <DropdownMenuSeparator />
             <DropdownMenuGroup>
-              <DropdownMenuItem>
-                <UserCircleIcon />
-                Account
-              </DropdownMenuItem>
-              <DropdownMenuItem>
-                <CreditCardIcon />
-                Billing
-              </DropdownMenuItem>
-              <DropdownMenuItem>
-                <BellIcon />
-                Notifications
+              <ProfileDialog user={user}>
+                <DropdownMenuItem onSelect={(e) => e.preventDefault()}>
+                  <UserCircleIcon className="mr-2 h-4 w-4" />
+                  Profil Düzenle
+                </DropdownMenuItem>
+              </ProfileDialog>
+
+              <DropdownMenuItem onSelect={(e) => e.preventDefault()}>
+                <div className="flex items-center justify-between w-full">
+                  <div className="flex items-center">
+                    <BellIcon className="mr-2 h-4 w-4" />
+                    Bildirimler
+                  </div>
+                  <Switch
+                    checked={notifications}
+                    onCheckedChange={toggleNotifications}
+                    className="scale-75"
+                  />
+                </div>
               </DropdownMenuItem>
             </DropdownMenuGroup>
             <DropdownMenuSeparator />
             <DropdownMenuItem asChild>
-              <form action="/auth/signout" method="post" className="w-full">
-                <button type="submit" className="flex w-full items-center gap-2">
-                  <LogOutIcon className="h-4 w-4" />
-                  Çıkış Yap
-                </button>
-              </form>
+              <button
+                onClick={async () => {
+                  await supabase.auth.signOut()
+                  window.location.href = '/login'
+                }}
+                className="flex w-full items-center gap-2"
+              >
+                <LogOutIcon className="h-4 w-4" />
+                Çıkış Yap
+              </button>
             </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>

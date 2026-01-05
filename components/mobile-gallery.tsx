@@ -155,7 +155,7 @@ export function MobileGallery() {
                                                       />
                                                       <button
                                                             onClick={() => handleDelete(img.id, img.url)}
-                                                            className="absolute top-2 right-2 bg-red-600 text-white p-2 rounded-full shadow-md hover:bg-red-700 transition-colors"
+                                                            className="absolute top-2 right-2 bg-red-600 text-white p-2 rounded-full shadow-md opacity-0 group-hover:opacity-100 transition-opacity duration-200 hover:bg-red-700"
                                                       >
                                                             <Trash2 className="h-3 w-3" />
                                                       </button>
