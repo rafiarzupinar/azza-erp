@@ -140,20 +140,20 @@ export function MobileGallery() {
                                     Henüz görsel yok
                               </div>
                         ) : (
-                              <div className="grid grid-cols-2 gap-4">
+                              <div className="flex gap-4 overflow-x-auto pb-4 snap-x snap-mandatory">
                                     {images.map((img) => (
-                                          <div key={img.id} className="relative group aspect-square rounded-lg overflow-hidden border bg-muted">
+                                          <div key={img.id} className="relative group flex-none w-40 aspect-square rounded-lg overflow-hidden border bg-muted snap-center">
                                                 <img
                                                       src={img.url}
                                                       alt="Gallery"
-                                                      className="object-cover w-full h-full transition-transform group-hover:scale-105"
+                                                      className="object-cover w-full h-full"
                                                       loading="lazy"
                                                 />
                                                 <button
                                                       onClick={() => handleDelete(img.id, img.url)}
-                                                      className="absolute top-2 right-2 bg-black/50 text-white p-1.5 rounded-full opacity-0 group-hover:opacity-100 transition-opacity"
+                                                      className="absolute top-2 right-2 bg-red-600 text-white p-2 rounded-full shadow-md hover:bg-red-700 transition-colors"
                                                 >
-                                                      <Trash2 className="h-4 w-4" />
+                                                      <Trash2 className="h-3 w-3" />
                                                 </button>
                                           </div>
                                     ))}
