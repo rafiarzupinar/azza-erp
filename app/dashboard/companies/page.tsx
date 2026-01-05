@@ -1,3 +1,4 @@
+import Link from "next/link"
 import { AppSidebar } from "@/components/app-sidebar"
 import { SiteHeader } from "@/components/site-header"
 import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar"
@@ -45,39 +46,44 @@ export default async function CompaniesPage() {
             <TabsContent value="customers" className="space-y-4 mt-4">
               <div className="grid gap-4 md:grid-cols-2">
                 {customers?.map((company) => (
-                  <Card key={company.id}>
-                    <CardHeader>
-                      <div className="flex items-start justify-between">
-                        <div>
-                          <CardTitle>{company.name}</CardTitle>
-                          <CardDescription>{company.country || 'Ülke belirtilmedi'}</CardDescription>
+                  <Link href={`/dashboard/companies/${company.id}`} key={company.id} className="block transition-all hover:opacity-80">
+                    <Card className="h-full">
+                      <CardHeader>
+                        <div className="flex items-start justify-between">
+                          <div>
+                            <CardTitle>{company.name}</CardTitle>
+                            <CardDescription>{company.country || 'Ülke belirtilmedi'}</CardDescription>
+                          </div>
+                          {/* Actions now handle their own click propagation */}
+                          <div>
+                            <CompanyActions company={company} />
+                          </div>
                         </div>
-                        <CompanyActions company={company} />
-                      </div>
-                    </CardHeader>
-                    <CardContent>
-                      <div className="space-y-2 text-sm">
-                        {company.contact_person && (
-                          <div className="flex justify-between">
-                            <span className="text-muted-foreground">İletişim:</span>
-                            <span>{company.contact_person}</span>
-                          </div>
-                        )}
-                        {company.phone && (
-                          <div className="flex justify-between">
-                            <span className="text-muted-foreground">Telefon:</span>
-                            <span>{company.phone}</span>
-                          </div>
-                        )}
-                        {company.email && (
-                          <div className="flex justify-between">
-                            <span className="text-muted-foreground">Email:</span>
-                            <span>{company.email}</span>
-                          </div>
-                        )}
-                      </div>
-                    </CardContent>
-                  </Card>
+                      </CardHeader>
+                      <CardContent>
+                        <div className="space-y-2 text-sm">
+                          {company.contact_person && (
+                            <div className="flex justify-between">
+                              <span className="text-muted-foreground">İletişim:</span>
+                              <span>{company.contact_person}</span>
+                            </div>
+                          )}
+                          {company.phone && (
+                            <div className="flex justify-between">
+                              <span className="text-muted-foreground">Telefon:</span>
+                              <span>{company.phone}</span>
+                            </div>
+                          )}
+                          {company.email && (
+                            <div className="flex justify-between">
+                              <span className="text-muted-foreground">Email:</span>
+                              <span>{company.email}</span>
+                            </div>
+                          )}
+                        </div>
+                      </CardContent>
+                    </Card>
+                  </Link>
                 ))}
               </div>
             </TabsContent>
@@ -85,39 +91,44 @@ export default async function CompaniesPage() {
             <TabsContent value="suppliers" className="space-y-4 mt-4">
               <div className="grid gap-4 md:grid-cols-2">
                 {suppliers?.map((company) => (
-                  <Card key={company.id}>
-                    <CardHeader>
-                      <div className="flex items-start justify-between">
-                        <div>
-                          <CardTitle>{company.name}</CardTitle>
-                          <CardDescription>{company.country || 'Ülke belirtilmedi'}</CardDescription>
+                  <Link href={`/dashboard/companies/${company.id}`} key={company.id} className="block transition-all hover:opacity-80">
+                    <Card className="h-full">
+                      <CardHeader>
+                        <div className="flex items-start justify-between">
+                          <div>
+                            <CardTitle>{company.name}</CardTitle>
+                            <CardDescription>{company.country || 'Ülke belirtilmedi'}</CardDescription>
+                          </div>
+                          {/* Actions now handle their own click propagation */}
+                          <div>
+                            <CompanyActions company={company} />
+                          </div>
                         </div>
-                        <CompanyActions company={company} />
-                      </div>
-                    </CardHeader>
-                    <CardContent>
-                      <div className="space-y-2 text-sm">
-                        {company.contact_person && (
-                          <div className="flex justify-between">
-                            <span className="text-muted-foreground">İletişim:</span>
-                            <span>{company.contact_person}</span>
-                          </div>
-                        )}
-                        {company.phone && (
-                          <div className="flex justify-between">
-                            <span className="text-muted-foreground">Telefon:</span>
-                            <span>{company.phone}</span>
-                          </div>
-                        )}
-                        {company.email && (
-                          <div className="flex justify-between">
-                            <span className="text-muted-foreground">Email:</span>
-                            <span>{company.email}</span>
-                          </div>
-                        )}
-                      </div>
-                    </CardContent>
-                  </Card>
+                      </CardHeader>
+                      <CardContent>
+                        <div className="space-y-2 text-sm">
+                          {company.contact_person && (
+                            <div className="flex justify-between">
+                              <span className="text-muted-foreground">İletişim:</span>
+                              <span>{company.contact_person}</span>
+                            </div>
+                          )}
+                          {company.phone && (
+                            <div className="flex justify-between">
+                              <span className="text-muted-foreground">Telefon:</span>
+                              <span>{company.phone}</span>
+                            </div>
+                          )}
+                          {company.email && (
+                            <div className="flex justify-between">
+                              <span className="text-muted-foreground">Email:</span>
+                              <span>{company.email}</span>
+                            </div>
+                          )}
+                        </div>
+                      </CardContent>
+                    </Card>
+                  </Link>
                 ))}
               </div>
             </TabsContent>

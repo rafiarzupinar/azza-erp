@@ -44,7 +44,10 @@ export function CompanyActions({ company }: CompanyActionsProps) {
 
   return (
     <>
-      <div className="flex gap-2">
+      <div className="flex gap-2" onClick={(e) => {
+        e.preventDefault()
+        e.stopPropagation()
+      }}>
         <Button size="sm" variant="outline" onClick={() => setEditOpen(true)}>
           <Edit className="h-4 w-4" />
         </Button>

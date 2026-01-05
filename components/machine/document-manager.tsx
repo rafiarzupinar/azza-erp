@@ -26,10 +26,17 @@ export function DocumentManager({ machine }: DocumentManagerProps) {
             setUploading(true)
 
             try {
-                  const { data: { session } } = await supabase.auth.getSession()
-                  if (!session) {
-                        throw new Error('Oturum bulunamadı. Lütfen sayfayı yenileyip tekrar giriş yapın.')
+                  // Check user authentication
+                  const { data: { user }, error: authError } = await supabase.auth.getUser()
+
+                  if (authError || !user) {
+                        console.error('Auth User Error:', authError)
+                        alert('Oturum süreniz dolmuş veya kimlik doğrulanamadı. Lütfen Çıkış Yapıp tekrar giriş yapın.')
+                        return
                   }
+
+                  console.log('User authenticated:', user.id)
+
 
                   const fileExt = file.name.split('.').pop()
                   const fileName = `${machine.id}/${Math.random().toString(36).substring(2)}.${fileExt}`
