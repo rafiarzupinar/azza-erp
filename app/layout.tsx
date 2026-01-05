@@ -15,6 +15,11 @@ export const metadata: Metadata = {
     type: "website",
     locale: "tr_TR",
   },
+  appleWebApp: {
+    capable: true,
+    statusBarStyle: "default",
+    title: "AZZA ERP",
+  },
 };
 
 export default function RootLayout({
