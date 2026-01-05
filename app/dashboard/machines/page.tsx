@@ -10,6 +10,7 @@ import { Package, Plus } from "lucide-react"
 
 import { machineStatusLabels, getMachineStatusVariant } from "@/lib/translations"
 import type { Machine, MachineStatus } from "@/types/database"
+import { MachineActions } from "@/components/machine-actions"
 import Link from "next/link"
 
 type MachineWithSupplier = Machine & {
@@ -53,9 +54,14 @@ export default async function MachinesPage() {
                       <CardTitle className="group-hover:text-primary transition-colors">{machine.brand} {machine.model}</CardTitle>
                       <CardDescription>{machine.machine_type}</CardDescription>
                     </div>
-                    <Badge variant={getMachineStatusVariant(machine.status as MachineStatus)}>
-                      {machineStatusLabels[machine.status as MachineStatus]}
-                    </Badge>
+                    <div className="flex items-center gap-2">
+                      <Badge variant={getMachineStatusVariant(machine.status as MachineStatus)}>
+                        {machineStatusLabels[machine.status as MachineStatus]}
+                      </Badge>
+                      <div className="z-20 relative">
+                        <MachineActions machine={machine} variant="list" />
+                      </div>
+                    </div>
                   </div>
                 </CardHeader>
                 <CardContent>

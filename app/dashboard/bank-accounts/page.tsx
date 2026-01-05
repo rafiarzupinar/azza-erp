@@ -7,6 +7,7 @@ import { Badge } from "@/components/ui/badge"
 import { createClient } from "@/lib/supabase/server"
 import { Plus, Building } from "lucide-react"
 import { CreateBankAccountDialog } from "@/components/create-bank-account-dialog"
+import { BankAccountActions } from "@/components/bank-account-actions"
 
 export default async function BankAccountsPage() {
   const supabase = await createClient()
@@ -39,7 +40,10 @@ export default async function BankAccountsPage() {
                       <CardTitle>{account.bank_name}</CardTitle>
                       <CardDescription>{account.account_holder}</CardDescription>
                     </div>
-                    <Badge>{account.currency}</Badge>
+                    <div className="flex items-center gap-2">
+                      <Badge>{account.currency}</Badge>
+                      <BankAccountActions id={account.id} name={account.bank_name} />
+                    </div>
                   </div>
                 </CardHeader>
                 <CardContent>

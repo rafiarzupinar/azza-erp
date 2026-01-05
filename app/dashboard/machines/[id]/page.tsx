@@ -9,6 +9,7 @@ import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { ArrowLeft, Edit } from "lucide-react"
 import Link from "next/link"
+import { MachineActions } from "@/components/machine-actions"
 import { machineStatusLabels, getMachineStatusVariant } from "@/lib/translations"
 import { MachineFinancials } from "@/components/machine/machine-financials"
 import { ExpenseList } from "@/components/machine/expense-list"
@@ -75,11 +76,9 @@ export default async function MachinePage({ params }: MachinePageProps) {
                                                 </p>
                                           </div>
                                     </div>
-                                    <Button variant="outline" className="w-full md:w-auto">
-                                          <Edit className="mr-2 h-4 w-4" />
-                                          Düzenle
-                                    </Button>
+                                    <MachineActions machine={machine} variant="detail" />
                               </div>
+
 
                               {/* Main Content */}
                               <Tabs defaultValue="overview" className="space-y-4">
@@ -169,6 +168,6 @@ export default async function MachinePage({ params }: MachinePageProps) {
                               </Tabs>
                         </div>
                   </SidebarInset>
-            </SidebarProvider>
+            </SidebarProvider >
       )
 }

@@ -9,6 +9,7 @@ import {
   SidebarProvider,
 } from "@/components/ui/sidebar"
 import { createClient } from "@/lib/supabase/server"
+import { MobileGallery } from "@/components/mobile-gallery"
 
 export default async function DashboardPage() {
   const supabase = await createClient()
@@ -85,9 +86,16 @@ export default async function DashboardPage() {
                 </div>
               </div>
             </div>
+
+            {/* Mobile Only Gallery */}
+            <div className="md:hidden mt-4">
+              <MobileGallery />
+            </div>
+
           </div>
         </div>
+
       </SidebarInset>
-    </SidebarProvider>
+    </SidebarProvider >
   )
 }
